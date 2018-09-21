@@ -1,0 +1,25 @@
+public function store(Request $request)
+    {
+//        return $request->all();
+        // User::create($request->all());
+
+        $input = $request->all();
+
+        if ($file = $request->file('photo_id')){
+            $name = time() . $file->getClientOriginalName();
+            $file->move('user_faces', $name);
+            $photo = Photo::create(['path'=>$name]);
+            $input['photo_id'] = $photo->id;
+        }
+
+        User::create($input);
+        return redirect('/');
+    }
+    
+    ------------------------------------------------------------------------
+    blade file
+    ------------------------------------------------------------------------
+    <div class="form-group">
+                {!! Form::label('photo_id', 'Upload A face:') !!}<br>
+                {!! Form::file('photo_id', null, ['class'=>'form-control']) !!}
+            </div>
